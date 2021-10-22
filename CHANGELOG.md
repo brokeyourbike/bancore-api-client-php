@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.1](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v3.0.0...v3.0.1) (2021-10-22)
+
+
+### Bug Fixes
+
+* always cast values to string ([bc5b80f](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/bc5b80fa27d8bf73907ea47e64dc6d18c6e49ba5))
+
 ## [3.0.0](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v2.0.0...v3.0.0) (2021-10-22)
 
 
