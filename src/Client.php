@@ -121,14 +121,14 @@ class Client implements HttpClientInterface
         }
 
         return $this->performRequest(HttpMethodEnum::POST(), 'transactions/validations/bank-account', [
-            'accountNumber' => $recipient->getBankAccount(),
-            'bankCode' => $recipient->getBankCode(),
-            'bankName' => $recipient->getBankName(),
-            'countryCode' => $recipient->getCountryCode(),
-            'identifier' => $identifierSource->getCode(),
-            'senderName' => $sender->getName(),
-            'beneficiaryName' => $recipient->getName(),
-            'mobileNumber' => $sender->getPhoneNumber(),
+            'accountNumber' => $recipient?->getBankAccount(),
+            'bankCode' => $recipient?->getBankCode(),
+            'bankName' => $recipient?->getBankName(),
+            'countryCode' => $recipient?->getCountryCode(),
+            'identifier' => $identifierSource?->getCode(),
+            'senderName' => $sender?->getName(),
+            'beneficiaryName' => $recipient?->getName(),
+            'mobileNumber' => $sender?->getPhoneNumber(),
             'sessionId' => $sessionId,
         ]);
     }
@@ -143,13 +143,13 @@ class Client implements HttpClientInterface
         }
 
         return $this->performRequest(HttpMethodEnum::POST(), 'transactions/quotations/bank-account', [
-            'accountNumber' => $recipient->getBankAccount(),
-            'beneficiaryCountry' => $recipient->getCountryCode(),
+            'accountNumber' => $recipient?->getBankAccount(),
+            'beneficiaryCountry' => $recipient?->getCountryCode(),
             'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
-            'beneficiaryMobileNumber' => $recipient->getPhoneNumber(),
+            'beneficiaryMobileNumber' => $recipient?->getPhoneNumber(),
             'senderAmount' => $transaction->getReceiveAmount(),
             'senderCurrency' => $transaction->getSendCurrencyCode(),
-            'senderMobileNumber' => $sender->getPhoneNumber(),
+            'senderMobileNumber' => $sender?->getPhoneNumber(),
             'sessionId' => $sessionId,
         ]);
     }
@@ -167,25 +167,25 @@ class Client implements HttpClientInterface
 
         return $this->performRequest(HttpMethodEnum::POST(), 'transactions/remittances/bank-account', [
             'sessionId' => $transaction->getReference(),
-            'identifier' => $identifierSource->getCode(),
-            'quoteId' => $quota->getReference(),
-            'accountNumber' => $recipient->getBankAccount(),
-            'bankCode' => $recipient->getBankCode(),
+            'identifier' => $identifierSource?->getCode(),
+            'quoteId' => $quota?->getReference(),
+            'accountNumber' => $recipient?->getBankAccount(),
+            'bankCode' => $recipient?->getBankCode(),
             'beneficiaryAmount' => $transaction->getReceiveAmount(),
-            'beneficiaryCountry' => $recipient->getCountryCode(),
+            'beneficiaryCountry' => $recipient?->getCountryCode(),
             'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
             'beneficiaryDetails' => [
-                'fullName' => $recipient->getName(),
+                'fullName' => $recipient?->getName(),
             ],
-            'beneficiaryMobileNumber' => $recipient->getPhoneNumber(),
+            'beneficiaryMobileNumber' => $recipient?->getPhoneNumber(),
             'senderCurrency' => $transaction->getSendCurrencyCode(),
             'senderDetails' => [
-                'fullName' => $sender->getName(),
+                'fullName' => $sender?->getName(),
                 'address' => [
-                    'country' => $sender->getCountryCode(),
+                    'country' => $sender?->getCountryCode(),
                 ],
             ],
-            'senderMobileNumber' => $sender->getPhoneNumber(),
+            'senderMobileNumber' => $sender?->getPhoneNumber(),
             'description' => $transaction->getReference(),
         ]);
     }
