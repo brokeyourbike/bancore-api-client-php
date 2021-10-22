@@ -10,16 +10,17 @@ namespace BrokeYourBike\Bancore\Tests;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
+use Carbon\Carbon;
 use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
 use BrokeYourBike\Bancore\Client;
 
 /**
  * @author Ivan Stasiuk <brokeyourbike@gmail.com>
  */
-class FetchAuthTokenRawTest extends TestCase
+class FetchExhangeRatesForRawTest extends TestCase
 {
-    private string $username = 'admin';
-    private string $password = 'super-secure-password';
+    private string $token = 'secure-token';
+    private string $currencyCode = 'USD';
 
     /**
      * @test
@@ -30,36 +31,40 @@ class FetchAuthTokenRawTest extends TestCase
         $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $mockedConfig->method('isLive')->willReturn($isLive);
         $mockedConfig->method('getUrl')->willReturn('https://api.example/');
-        $mockedConfig->method('getUsername')->willReturn($this->username);
-        $mockedConfig->method('getPassword')->willReturn($this->password);
 
         $mockedResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $mockedResponse->method('getStatusCode')->willReturn(200);
         $mockedResponse->method('getBody')
             ->willReturn('{
-                "token": "123456789",
-                "expiresIn": 86400
-            }');
+                "requestDate": "' . Carbon::now()->format('Y-m-d H:i:s') . '",
+                "requestCurrency": "' . $this->currencyCode . '",
+                "quotationStatus": "9000:Success",
+                "quotes": [
+                    {
+                        "receivingServiceProvider": "NG",
+                        "receivingCurrency": "NGN",
+                        "fxRate": "400.00"
+                    }
+            ]}');
 
         /** @var \Mockery\MockInterface $mockedClient */
         $mockedClient = \Mockery::mock(\GuzzleHttp\Client::class);
         $mockedClient->shouldReceive('request')->withArgs([
-            'POST',
-            'https://api.example/auth',
+            'GET',
+            "https://api.example/transactions/exchange-rates/{$this->currencyCode}",
             [
                 \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
                 \GuzzleHttp\RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
+                    'Authorization' => "Bearer {$this->token}",
                 ],
-                \GuzzleHttp\RequestOptions::JSON => [
-                    'username' => $this->username,
-                    'password' => $this->password,
-                    'rememberMe' => true,
-                ],
+                \GuzzleHttp\RequestOptions::JSON => [],
             ],
         ])->once()->andReturn($mockedResponse);
 
         $mockedCache = $this->getMockBuilder(CacheInterface::class)->getMock();
+        $mockedCache->method('has')->willReturn(true);
+        $mockedCache->method('get')->willReturn($this->token);
 
         /**
          * @var ConfigInterface $mockedConfig
@@ -67,7 +72,8 @@ class FetchAuthTokenRawTest extends TestCase
          * @var CacheInterface $mockedCache
          * */
         $api = new Client($mockedConfig, $mockedClient, $mockedCache);
-        $requestResult = $api->fetchAuthTokenRaw();
+
+        $requestResult = $api->fetchExhangeRatesForRaw($this->currencyCode);
 
         $this->assertInstanceOf(ResponseInterface::class, $requestResult);
     }
