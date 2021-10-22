@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v2.0.0...v3.0.0) (2021-10-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* make interface more flexible
+
+### Bug Fixes
+
+* make interface more flexible ([5ac0a8b](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/5ac0a8bf46a166f737306c3e155d95c0f9fdfac2))
+* remove unused code ([ac64eef](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/ac64eefc742bf308c5b20ce4a1de8613e58a9217))
+
 ## [2.0.0](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v1.0.0...v2.0.0) (2021-10-22)
 
 
