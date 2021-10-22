@@ -21,8 +21,8 @@ composer require brokeyourbike/bancore-api-client
 ```php
 use BrokeYourBike\Bancore\Client;
 
-$apiClient = new Client($config, $httpClient);
-$apiClient->fetchBalanceRaw();
+$apiClient = new Client($config, $httpClient, $psrCache);
+$apiClient->fetchAuthTokenRaw();
 ```
 
 ## License
