@@ -8,6 +8,8 @@
 
 namespace BrokeYourBike\Bancore\Interfaces;
 
+use BrokeYourBike\Bancore\Enums\IdentificationTypeEnum;
+
 /**
  * @author Ivan Stasiuk <brokeyourbike@gmail.com>
  */
@@ -16,4 +18,6 @@ interface SenderInterface
     public function getName(): string;
     public function getPhoneNumber(): string;
     public function getCountryCode(): string;
+    public function getIdentificationType(): ?IdentificationTypeEnum;
+    public function getIdentificationNumber(): ?string;
 }

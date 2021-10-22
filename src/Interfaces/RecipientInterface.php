@@ -16,7 +16,7 @@ interface RecipientInterface
     public function getName(): string;
     public function getPhoneNumber(): string;
     public function getCountryCode(): string;
-    public function getBankAccount(): string;
-    public function getBankCode(): string;
-    public function getBankName(): string;
+    public function getBankAccount(): ?string;
+    public function getBankCode(): ?string;
+    public function getBankName(): ?string;
 }
