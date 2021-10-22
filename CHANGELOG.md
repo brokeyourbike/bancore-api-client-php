@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.2](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v3.0.1...v3.0.2) (2021-10-22)
+
+
+### Bug Fixes
+
+* add missing static methods ([6fa9cb0](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/6fa9cb01874379c90eaa0fb1d427774843c610c5))
+
 ### [3.0.1](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v3.0.0...v3.0.1) (2021-10-22)
 
 
