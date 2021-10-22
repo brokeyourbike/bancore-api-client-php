@@ -17,14 +17,14 @@ use BrokeYourBike\Bancore\Client;
  */
 class GetAuthTokenTest extends TestCase
 {
+    private string $tokenValue = 'super-secure-token';
+
     /**
      * @test
      * @dataProvider isLiveProvider
      */
     public function it_can_cache_and_return_auth_token()
     {
-        $tokenValue = 'super-secure-token';
-
         $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
 
         $mockedResponse = $this->getMockBuilder(\Psr\Http\Message\ResponseInterface::class)->getMock();
@@ -32,7 +32,7 @@ class GetAuthTokenTest extends TestCase
         $mockedResponse->method('getBody')
             ->willReturn('{
                 "expiresIn": "3600",
-                "token": "' . $tokenValue . '"
+                "token": "' . $this->tokenValue . '"
             }');
 
         /** @var \GuzzleHttp\Client $mockedClient */
@@ -50,14 +50,14 @@ class GetAuthTokenTest extends TestCase
         $api = new Client($mockedConfig, $mockedClient, $mockedCache);
         $requestResult = $api->getAuthToken();
 
-        $this->assertSame($tokenValue, $requestResult);
+        $this->assertSame($this->tokenValue, $requestResult);
 
         /** @var \Mockery\MockInterface $mockedCache */
         $mockedCache->shouldHaveReceived('set')
             ->once()
             ->with(
                 $api->authTokenCacheKey(),
-                $tokenValue,
+                $this->tokenValue,
                 3600
             );
     }
@@ -65,8 +65,6 @@ class GetAuthTokenTest extends TestCase
     /** @test */
     public function it_can_return_cached_value()
     {
-        $tokenValue = 'super-secure-token';
-
         $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
 
         /** @var \Mockery\MockInterface $mockedClient */
@@ -80,7 +78,7 @@ class GetAuthTokenTest extends TestCase
             ->andReturn(true);
         $mockedCache->shouldReceive('get')
             ->once()
-            ->andReturn($tokenValue);
+            ->andReturn($this->tokenValue);
 
         /**
          * @var ConfigInterface $mockedConfig
@@ -90,7 +88,7 @@ class GetAuthTokenTest extends TestCase
         $api = new Client($mockedConfig, $mockedClient, $mockedCache);
         $requestResult = $api->getAuthToken();
 
-        $this->assertSame($tokenValue, $requestResult);
+        $this->assertSame($this->tokenValue, $requestResult);
     }
 
     /**

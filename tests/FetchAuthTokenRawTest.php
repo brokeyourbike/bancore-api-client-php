@@ -17,20 +17,20 @@ use BrokeYourBike\Bancore\Client;
  */
 class FetchAuthTokenRawTest extends TestCase
 {
+    private string $username = 'admin';
+    private string $password = 'super-secure-password';
+
     /**
      * @test
      * @dataProvider isLiveProvider
      */
     public function it_can_prepare_request(bool $isLive): void
     {
-        $username = 'admin';
-        $password = 'super-secure-password';
-
         $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $mockedConfig->method('isLive')->willReturn($isLive);
         $mockedConfig->method('getUrl')->willReturn('https://api.example/');
-        $mockedConfig->method('getUsername')->willReturn($username);
-        $mockedConfig->method('getPassword')->willReturn($password);
+        $mockedConfig->method('getUsername')->willReturn($this->username);
+        $mockedConfig->method('getPassword')->willReturn($this->password);
 
         $mockedResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $mockedResponse->method('getStatusCode')->willReturn(200);
@@ -51,8 +51,8 @@ class FetchAuthTokenRawTest extends TestCase
                     'Accept' => 'application/json',
                 ],
                 \GuzzleHttp\RequestOptions::JSON => [
-                    'username' => $username,
-                    'password' => $password,
+                    'username' => $this->username,
+                    'password' => $this->password,
                     'rememberMe' => true,
                 ],
             ],
