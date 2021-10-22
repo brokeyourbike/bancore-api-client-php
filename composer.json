@@ -22,7 +22,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^8.0",
+        "php": "^7.4 || ^8.0",
         "brokeyourbike/http-client": "^1.0",
         "brokeyourbike/resolve-uri": "^1.0",
         "myclabs/php-enum": "^1.8",

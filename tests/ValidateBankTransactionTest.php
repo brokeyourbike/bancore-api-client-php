@@ -11,7 +11,11 @@ namespace BrokeYourBike\Bancore\Tests;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use BrokeYourBike\Bancore\Interfaces\TransactionInterface;
+use BrokeYourBike\Bancore\Interfaces\SenderInterface;
+use BrokeYourBike\Bancore\Interfaces\RecipientInterface;
+use BrokeYourBike\Bancore\Interfaces\IdentifierSourceInterface;
 use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
+use BrokeYourBike\Bancore\Exceptions\PrepareRequestException;
 use BrokeYourBike\Bancore\Client;
 
 /**
@@ -21,6 +25,96 @@ class ValidateBankTransactionTest extends TestCase
 {
     private string $token = 'secure-token';
     private string $sessionId = 'session-id';
+    private SenderInterface $sender;
+    private RecipientInterface $recipient;
+    private IdentifierSourceInterface $identifierSource;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->sender = $this->getMockBuilder(SenderInterface::class)->getMock();
+        $this->recipient = $this->getMockBuilder(RecipientInterface::class)->getMock();
+        $this->identifierSource = $this->getMockBuilder(IdentifierSourceInterface::class)->getMock();
+    }
+
+    /** @test */
+    public function it_will_throw_if_no_sender_in_transaction()
+    {
+        /** @var TransactionInterface $transaction */
+        $transaction = $this->getMockBuilder(TransactionInterface::class)->getMock();
+
+        $this->assertNull($transaction->getSender());
+
+        $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
+        $mockedClient = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)->getMock();
+        $mockedCache = $this->getMockBuilder(CacheInterface::class)->getMock();
+
+        $this->expectExceptionMessage(SenderInterface::class . ' is required');
+        $this->expectException(PrepareRequestException::class);
+
+        /**
+         * @var ConfigInterface $mockedConfig
+         * @var \GuzzleHttp\Client $mockedClient
+         * @var CacheInterface $mockedCache
+         * */
+        $api = new Client($mockedConfig, $mockedClient, $mockedCache);
+
+        $api->validateBankTransaction($this->sessionId, $transaction);
+    }
+
+    /** @test */
+    public function it_will_throw_if_no_recipient_in_transaction()
+    {
+        $transaction = $this->getMockBuilder(TransactionInterface::class)->getMock();
+        $transaction->method('getSender')->willReturn($this->sender);
+
+        /** @var TransactionInterface $transaction */
+        $this->assertNull($transaction->getRecipient());
+
+        $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
+        $mockedClient = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)->getMock();
+        $mockedCache = $this->getMockBuilder(CacheInterface::class)->getMock();
+
+        $this->expectExceptionMessage(RecipientInterface::class . ' is required');
+        $this->expectException(PrepareRequestException::class);
+
+        /**
+         * @var ConfigInterface $mockedConfig
+         * @var \GuzzleHttp\Client $mockedClient
+         * @var CacheInterface $mockedCache
+         * */
+        $api = new Client($mockedConfig, $mockedClient, $mockedCache);
+
+        $api->validateBankTransaction($this->sessionId, $transaction);
+    }
+
+    /** @test */
+    public function it_will_throw_if_no_identifier_source_in_transaction()
+    {
+        $transaction = $this->getMockBuilder(TransactionInterface::class)->getMock();
+        $transaction->method('getSender')->willReturn($this->sender);
+        $transaction->method('getRecipient')->willReturn($this->recipient);
+
+        /** @var TransactionInterface $transaction */
+        $this->assertNull($transaction->getIdentifierSource());
+
+        $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
+        $mockedClient = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)->getMock();
+        $mockedCache = $this->getMockBuilder(CacheInterface::class)->getMock();
+
+        $this->expectExceptionMessage(IdentifierSourceInterface::class . ' is required');
+        $this->expectException(PrepareRequestException::class);
+
+        /**
+         * @var ConfigInterface $mockedConfig
+         * @var \GuzzleHttp\Client $mockedClient
+         * @var CacheInterface $mockedCache
+         * */
+        $api = new Client($mockedConfig, $mockedClient, $mockedCache);
+
+        $api->validateBankTransaction($this->sessionId, $transaction);
+    }
 
     /**
      * @test
@@ -28,8 +122,13 @@ class ValidateBankTransactionTest extends TestCase
      */
     public function it_can_prepare_request(bool $isLive): void
     {
-        /** @var TransactionInterface $transaction */
         $transaction = $this->getMockBuilder(TransactionInterface::class)->getMock();
+        $transaction->method('getSender')->willReturn($this->sender);
+        $transaction->method('getRecipient')->willReturn($this->recipient);
+        $transaction->method('getIdentifierSource')->willReturn($this->identifierSource);
+
+        /** @var TransactionInterface $transaction */
+        $this->assertInstanceOf(TransactionInterface::class, $transaction);
 
         $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $mockedConfig->method('isLive')->willReturn($isLive);
@@ -55,14 +154,14 @@ class ValidateBankTransactionTest extends TestCase
                     'Authorization' => "Bearer {$this->token}",
                 ],
                 \GuzzleHttp\RequestOptions::JSON => [
-                    'accountNumber' => $transaction->getRecipient()?->getBankAccount(),
-                    'bankCode' => $transaction->getRecipient()?->getBankCode(),
-                    'bankName' => $transaction->getRecipient()?->getBankName(),
-                    'countryCode' => $transaction->getRecipient()?->getCountryCode(),
+                    'accountNumber' => $transaction->getRecipient()->getBankAccount(),
+                    'bankCode' => $transaction->getRecipient()->getBankCode(),
+                    'bankName' => $transaction->getRecipient()->getBankName(),
+                    'countryCode' => $transaction->getRecipient()->getCountryCode(),
                     'identifier' => $transaction->getIdentifierSource()?->getCode(),
-                    'senderName' => $transaction->getSender()?->getName(),
-                    'beneficiaryName' => $transaction->getRecipient()?->getName(),
-                    'mobileNumber' => $transaction->getRecipient()?->getPhoneNumber(),
+                    'senderName' => $transaction->getSender()->getName(),
+                    'beneficiaryName' => $transaction->getRecipient()->getName(),
+                    'mobileNumber' => $transaction->getRecipient()->getPhoneNumber(),
                     'sessionId' => $this->sessionId,
                 ],
             ],
@@ -90,8 +189,13 @@ class ValidateBankTransactionTest extends TestCase
      */
     public function it_will_pass_source_model_as_option(bool $isLive): void
     {
-        /** @var SourceTransactionFixture $transaction */
         $transaction = $this->getMockBuilder(SourceTransactionFixture::class)->getMock();
+        $transaction->method('getSender')->willReturn($this->sender);
+        $transaction->method('getRecipient')->willReturn($this->recipient);
+        $transaction->method('getIdentifierSource')->willReturn($this->identifierSource);
+
+        /** @var SourceTransactionFixture $transaction */
+        $this->assertInstanceOf(SourceTransactionFixture::class, $transaction);
 
         $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $mockedConfig->method('isLive')->willReturn($isLive);
@@ -109,14 +213,14 @@ class ValidateBankTransactionTest extends TestCase
                     'Authorization' => "Bearer {$this->token}",
                 ],
                 \GuzzleHttp\RequestOptions::JSON => [
-                    'accountNumber' => $transaction->getRecipient()?->getBankAccount(),
-                    'bankCode' => $transaction->getRecipient()?->getBankCode(),
-                    'bankName' => $transaction->getRecipient()?->getBankName(),
-                    'countryCode' => $transaction->getRecipient()?->getCountryCode(),
+                    'accountNumber' => $transaction->getRecipient()->getBankAccount(),
+                    'bankCode' => $transaction->getRecipient()->getBankCode(),
+                    'bankName' => $transaction->getRecipient()->getBankName(),
+                    'countryCode' => $transaction->getRecipient()->getCountryCode(),
                     'identifier' => $transaction->getIdentifierSource()?->getCode(),
-                    'senderName' => $transaction->getSender()?->getName(),
-                    'beneficiaryName' => $transaction->getRecipient()?->getName(),
-                    'mobileNumber' => $transaction->getRecipient()?->getPhoneNumber(),
+                    'senderName' => $transaction->getSender()->getName(),
+                    'beneficiaryName' => $transaction->getRecipient()->getName(),
+                    'mobileNumber' => $transaction->getRecipient()->getPhoneNumber(),
                     'sessionId' => $this->sessionId,
                 ],
                 \BrokeYourBike\HasSourceModel\Enums\RequestOptions::SOURCE_MODEL => $transaction,

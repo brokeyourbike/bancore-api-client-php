@@ -18,7 +18,12 @@ use BrokeYourBike\HttpClient\HttpClientInterface;
 use BrokeYourBike\HasSourceModel\SourceModelInterface;
 use BrokeYourBike\HasSourceModel\HasSourceModelTrait;
 use BrokeYourBike\Bancore\Interfaces\TransactionInterface;
+use BrokeYourBike\Bancore\Interfaces\SenderInterface;
+use BrokeYourBike\Bancore\Interfaces\RecipientInterface;
+use BrokeYourBike\Bancore\Interfaces\QuotaInterface;
+use BrokeYourBike\Bancore\Interfaces\IdentifierSourceInterface;
 use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
+use BrokeYourBike\Bancore\Exceptions\PrepareRequestException;
 
 /**
  * @author Ivan Stasiuk <brokeyourbike@gmail.com>
@@ -116,19 +121,31 @@ class Client implements HttpClientInterface
         $recipient = $transaction->getRecipient();
         $identifierSource = $transaction->getIdentifierSource();
 
+        if (!$sender instanceof SenderInterface) {
+            throw PrepareRequestException::noSender($transaction);
+        }
+
+        if (!$recipient instanceof RecipientInterface) {
+            throw PrepareRequestException::noRecipient($transaction);
+        }
+
+        if (!$identifierSource instanceof IdentifierSourceInterface) {
+            throw PrepareRequestException::noIdentifierSource($transaction);
+        }
+
         if ($transaction instanceof SourceModelInterface) {
             $this->setSourceModel($transaction);
         }
 
         return $this->performRequest(HttpMethodEnum::POST(), 'transactions/validations/bank-account', [
-            'accountNumber' => $recipient?->getBankAccount(),
-            'bankCode' => $recipient?->getBankCode(),
-            'bankName' => $recipient?->getBankName(),
-            'countryCode' => $recipient?->getCountryCode(),
-            'identifier' => $identifierSource?->getCode(),
-            'senderName' => $sender?->getName(),
-            'beneficiaryName' => $recipient?->getName(),
-            'mobileNumber' => $sender?->getPhoneNumber(),
+            'accountNumber' => $recipient->getBankAccount(),
+            'bankCode' => $recipient->getBankCode(),
+            'bankName' => $recipient->getBankName(),
+            'countryCode' => $recipient->getCountryCode(),
+            'identifier' => $identifierSource->getCode(),
+            'senderName' => $sender->getName(),
+            'beneficiaryName' => $recipient->getName(),
+            'mobileNumber' => $sender->getPhoneNumber(),
             'sessionId' => $sessionId,
         ]);
     }
@@ -138,18 +155,26 @@ class Client implements HttpClientInterface
         $sender = $transaction->getSender();
         $recipient = $transaction->getRecipient();
 
+        if (!$sender instanceof SenderInterface) {
+            throw PrepareRequestException::noSender($transaction);
+        }
+
+        if (!$recipient instanceof RecipientInterface) {
+            throw PrepareRequestException::noRecipient($transaction);
+        }
+
         if ($transaction instanceof SourceModelInterface) {
             $this->setSourceModel($transaction);
         }
 
         return $this->performRequest(HttpMethodEnum::POST(), 'transactions/quotations/bank-account', [
-            'accountNumber' => $recipient?->getBankAccount(),
-            'beneficiaryCountry' => $recipient?->getCountryCode(),
+            'accountNumber' => $recipient->getBankAccount(),
+            'beneficiaryCountry' => $recipient->getCountryCode(),
             'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
-            'beneficiaryMobileNumber' => $recipient?->getPhoneNumber(),
+            'beneficiaryMobileNumber' => $recipient->getPhoneNumber(),
             'senderAmount' => $transaction->getReceiveAmount(),
             'senderCurrency' => $transaction->getSendCurrencyCode(),
-            'senderMobileNumber' => $sender?->getPhoneNumber(),
+            'senderMobileNumber' => $sender->getPhoneNumber(),
             'sessionId' => $sessionId,
         ]);
     }
@@ -158,8 +183,24 @@ class Client implements HttpClientInterface
     {
         $sender = $transaction->getSender();
         $recipient = $transaction->getRecipient();
-        $identifierSource = $transaction->getIdentifierSource();
         $quota = $transaction->getQuota();
+        $identifierSource = $transaction->getIdentifierSource();
+
+        if (!$sender instanceof SenderInterface) {
+            throw PrepareRequestException::noSender($transaction);
+        }
+
+        if (!$recipient instanceof RecipientInterface) {
+            throw PrepareRequestException::noRecipient($transaction);
+        }
+
+        if (!$quota instanceof QuotaInterface) {
+            throw PrepareRequestException::noQuota($transaction);
+        }
+
+        if (!$identifierSource instanceof IdentifierSourceInterface) {
+            throw PrepareRequestException::noIdentifierSource($transaction);
+        }
 
         if ($transaction instanceof SourceModelInterface) {
             $this->setSourceModel($transaction);
@@ -167,25 +208,25 @@ class Client implements HttpClientInterface
 
         return $this->performRequest(HttpMethodEnum::POST(), 'transactions/remittances/bank-account', [
             'sessionId' => $transaction->getReference(),
-            'identifier' => $identifierSource?->getCode(),
-            'quoteId' => $quota?->getReference(),
-            'accountNumber' => $recipient?->getBankAccount(),
-            'bankCode' => $recipient?->getBankCode(),
+            'identifier' => $identifierSource->getCode(),
+            'quoteId' => $quota->getReference(),
+            'accountNumber' => $recipient->getBankAccount(),
+            'bankCode' => $recipient->getBankCode(),
             'beneficiaryAmount' => $transaction->getReceiveAmount(),
-            'beneficiaryCountry' => $recipient?->getCountryCode(),
+            'beneficiaryCountry' => $recipient->getCountryCode(),
             'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
             'beneficiaryDetails' => [
-                'fullName' => $recipient?->getName(),
+                'fullName' => $recipient->getName(),
             ],
-            'beneficiaryMobileNumber' => $recipient?->getPhoneNumber(),
+            'beneficiaryMobileNumber' => $recipient->getPhoneNumber(),
             'senderCurrency' => $transaction->getSendCurrencyCode(),
             'senderDetails' => [
-                'fullName' => $sender?->getName(),
+                'fullName' => $sender->getName(),
                 'address' => [
-                    'country' => $sender?->getCountryCode(),
+                    'country' => $sender->getCountryCode(),
                 ],
             ],
-            'senderMobileNumber' => $sender?->getPhoneNumber(),
+            'senderMobileNumber' => $sender->getPhoneNumber(),
             'description' => $transaction->getReference(),
         ]);
     }
