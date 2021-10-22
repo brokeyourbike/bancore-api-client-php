@@ -63,7 +63,7 @@ class Client implements HttpClientInterface
             $this->cache->set(
                 $this->authTokenCacheKey(),
                 $responseJson['token'],
-                $responseJson['expiresIn']
+                (int) $responseJson['expiresIn']
             );
 
             return $responseJson['token'];
