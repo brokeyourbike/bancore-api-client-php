@@ -17,20 +17,4 @@ interface ConfigInterface
     public function getUrl(): string;
     public function getUsername(): string;
     public function getPassword(): string;
-
-    /**
-     * Sender phone number is required,
-     * and it's good to have a default value
-     *
-     * @return string
-     */
-    public function getDefaultSenderPhoneNumber(): string;
-
-    /**
-     * Recipient phone number is required
-     * and it's good to have a default value
-     *
-     * @return string
-     */
-    public function getDefaultRecipientPhoneNumber(): string;
 }
