@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.0.0](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v3.0.2...v4.0.0) (2021-12-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove `isLive`
+
+### Bug Fixes
+
+* remove `isLive` ([89c6d1a](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/89c6d1a7d1ba87cd34ab79e1da1c567b6b03f8b5))
+
+
+### Miscellaneous Chores
+
+* update title ([94bb17a](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/94bb17a23212e28591824b87024b1f5190094a6b))
+
 ### [3.0.2](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v3.0.1...v3.0.2) (2021-10-22)
 
 
