@@ -1,4 +1,4 @@
-# bancore-api-client-php
+# bancore-api-client
 
 [![Latest Stable Version](https://img.shields.io/github/v/release/brokeyourbike/bancore-api-client-php)](https://github.com/brokeyourbike/bancore-api-client-php/releases)
 [![Total Downloads](https://poser.pugx.org/brokeyourbike/bancore-api-client/downloads)](https://packagist.org/packages/brokeyourbike/bancore-api-client)
