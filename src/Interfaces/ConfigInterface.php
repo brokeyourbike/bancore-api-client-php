@@ -13,7 +13,6 @@ namespace BrokeYourBike\Bancore\Interfaces;
  */
 interface ConfigInterface
 {
-    public function isLive(): bool;
     public function getUrl(): string;
     public function getUsername(): string;
     public function getPassword(): string;
