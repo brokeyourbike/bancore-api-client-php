@@ -1,0 +1,272 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:APPLICATION_ERROR is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:AUTH_FAILED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:BLOCKED_CARD is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:BLOCKED_MOBILE_OR_BANK_ACCOUNT is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:DUPLICATE_SESSION_ID is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:FAILED_ATTEMPTS_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INACTIVE_MERCHANT_STATUS is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INSUFFICIENT_FUNDS is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_ACCOUNT is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_AMOUNT is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_CARD_NUMBER is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_CARD_TOKEN is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_ENCRYPTION_KEY is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_FEE is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_IDENTIFIER is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_MERCHANT_IP is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_PIN is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:INVALID_SESSION_ID is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:MERCHANT_DAILY_LIMIT_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:MERCHANT_MONTHLY_LIMIT_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:MERCHANT_VALIDATION_FAILED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:MERCHANT_WEEKLY_LIMIT_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:MISSING_REQUEST_PARAMS is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:NO_CONFIGURED_WALLET is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:ORDER_EXPIRED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:ORDER_FAILED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:ORDER_PARAMS_MISMATCH is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:PARTNER_NOT_AVAILABLE is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:PENDING is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:POSSIBLE_DUPLICATE_REQUEST is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:PROVIDER_NOT_REACHABLE is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:QUOTA_INVALID is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:QUOTA_NOT_FOUND is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:RECIPIENT_KYC_FAILED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:RECIPIENT_LIMIT_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:RECIPINT_BANK_NOT_AVAILABLE is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:REMIT_FAILED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SENDER_AMOUNT_TOO_BIG is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SENDER_AMOUNT_TOO_SMALL is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SENDER_CURRENCY_NOT_ENABLED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SENDER_DAILY_LIMIT_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SENDER_KYC_FAILED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SENDER_LIMIT_EXCEEDED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SERVICE_NOT_CONFIGURED is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SUCCESS is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:SYSTEM_MALFUNCTION_AT_PARTNER_INSTITUTION is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:TRANSFER_LIMIT_EXCEEDED_AT_PARTNER_INSTITUTION is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:UNABLE_TO_GET_FOREX_RATE is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\ErrorCodeEnum\\:\\:UNKNOWN_STATUS is unused\\.$#"
+			count: 1
+			path: src/Enums/ErrorCodeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\GenderTypeEnum\\:\\:FEMALE is unused\\.$#"
+			count: 1
+			path: src/Enums/GenderTypeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\GenderTypeEnum\\:\\:MALE is unused\\.$#"
+			count: 1
+			path: src/Enums/GenderTypeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\IdentificationTypeEnum\\:\\:DRIVING_LICENSE is unused\\.$#"
+			count: 1
+			path: src/Enums/IdentificationTypeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\IdentificationTypeEnum\\:\\:NATIONAL_ID is unused\\.$#"
+			count: 1
+			path: src/Enums/IdentificationTypeEnum.php
+
+		-
+			message: "#^Constant BrokeYourBike\\\\Bancore\\\\Enums\\\\IdentificationTypeEnum\\:\\:PASSPORT is unused\\.$#"
+			count: 1
+			path: src/Enums/IdentificationTypeEnum.php
+

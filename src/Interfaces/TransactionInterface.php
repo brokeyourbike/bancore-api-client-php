@@ -18,10 +18,10 @@ use BrokeYourBike\Bancore\Interfaces\IdentifierSourceInterface;
  */
 interface TransactionInterface
 {
-    public function getSender(): SenderInterface;
-    public function getRecipient(): RecipientInterface;
-    public function getQuota(): QuotaInterface;
-    public function getIdentifierSource(): IdentifierSourceInterface;
+    public function getSender(): ?SenderInterface;
+    public function getRecipient(): ?RecipientInterface;
+    public function getQuota(): ?QuotaInterface;
+    public function getIdentifierSource(): ?IdentifierSourceInterface;
     public function getReference(): string;
     public function getSendCurrencyCode(): string;
     public function getReceiveCurrencyCode(): string;

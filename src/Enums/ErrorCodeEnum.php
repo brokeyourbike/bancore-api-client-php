@@ -54,6 +54,10 @@ namespace BrokeYourBike\Bancore\Enums;
  * @method static ErrorCodeEnum SERVICE_NOT_CONFIGURED()
  * @method static ErrorCodeEnum SENDER_DAILY_LIMIT_EXCEEDED()
  * @method static ErrorCodeEnum NO_CONFIGURED_WALLET()
+ * @method static ErrorCodeEnum RECIPINT_BANK_NOT_AVAILABLE()
+ * @method static ErrorCodeEnum UNKNOWN_STATUS()
+ * @method static ErrorCodeEnum TRANSFER_LIMIT_EXCEEDED_AT_PARTNER_INSTITUTION()
+ * @method static ErrorCodeEnum SYSTEM_MALFUNCTION_AT_PARTNER_INSTITUTION()
  * @method static ErrorCodeEnum PARTNER_NOT_AVAILABLE()
  * @method static ErrorCodeEnum APPLICATION_ERROR()
  * @psalm-immutable
