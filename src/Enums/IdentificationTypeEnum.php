@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2021 Ivan Stasiuk <brokeyourbike@gmail.com>.
+// Copyright (C) 2021 Ivan Stasiuk <ivan@stasi.uk>.
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
@@ -9,16 +9,11 @@
 namespace BrokeYourBike\Bancore\Enums;
 
 /**
- * @author Ivan Stasiuk <brokeyourbike@gmail.com>
- *
- * @method static IdentificationTypeEnum PASSPORT()
- * @method static IdentificationTypeEnum DRIVING_LICENSE()
- * @method static IdentificationTypeEnum NATIONAL_ID()
- * @psalm-immutable
+ * @author Ivan Stasiuk <ivan@stasi.uk>
  */
-final class IdentificationTypeEnum extends \MyCLabs\Enum\Enum
+enum IdentificationTypeEnum: string
 {
-    private const PASSPORT = 'passport';
-    private const DRIVING_LICENSE = 'drivinglicense';
-    private const NATIONAL_ID = 'nationalidcard';
+    case PASSPORT = 'passport';
+    case DRIVING_LICENSE = 'drivinglicense';
+    case NATIONAL_ID = 'nationalidcard';
 }

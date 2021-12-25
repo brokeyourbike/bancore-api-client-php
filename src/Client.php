@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2021 Ivan Stasiuk <brokeyourbike@gmail.com>.
+// Copyright (C) 2021 Ivan Stasiuk <ivan@stasi.uk>.
 //
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
@@ -26,7 +26,7 @@ use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
 use BrokeYourBike\Bancore\Exceptions\PrepareRequestException;
 
 /**
- * @author Ivan Stasiuk <brokeyourbike@gmail.com>
+ * @author Ivan Stasiuk <ivan@stasi.uk>
  */
 class Client implements HttpClientInterface
 {
@@ -97,7 +97,7 @@ class Client implements HttpClientInterface
         $uri = (string) $this->resolveUriFor($this->config->getUrl(), 'auth');
 
         return $this->httpClient->request(
-            (string) HttpMethodEnum::POST(),
+            HttpMethodEnum::POST->value,
             $uri,
             $options
         );
@@ -105,17 +105,17 @@ class Client implements HttpClientInterface
 
     public function fetchBanksRaw(string $countryCode): ResponseInterface
     {
-        return $this->performRequest(HttpMethodEnum::GET(), "miscellaneous/banks/country/{$countryCode}", []);
+        return $this->performRequest(HttpMethodEnum::GET, "miscellaneous/banks/country/{$countryCode}", []);
     }
 
     public function fetchMobileWalletsRaw(string $countryCode): ResponseInterface
     {
-        return $this->performRequest(HttpMethodEnum::GET(), "miscellaneous/mobile-wallets/country/{$countryCode}", []);
+        return $this->performRequest(HttpMethodEnum::GET, "miscellaneous/mobile-wallets/country/{$countryCode}", []);
     }
 
     public function fetchExhangeRatesForRaw(string $baseCurrencyCode): ResponseInterface
     {
-        return $this->performRequest(HttpMethodEnum::GET(), "transactions/exchange-rates/{$baseCurrencyCode}", []);
+        return $this->performRequest(HttpMethodEnum::GET, "transactions/exchange-rates/{$baseCurrencyCode}", []);
     }
 
     public function validateBankTransaction(string $sessionId, TransactionInterface $transaction): ResponseInterface
@@ -140,7 +140,7 @@ class Client implements HttpClientInterface
             $this->setSourceModel($transaction);
         }
 
-        return $this->performRequest(HttpMethodEnum::POST(), 'transactions/validations/bank-account', [
+        return $this->performRequest(HttpMethodEnum::POST, 'transactions/validations/bank-account', [
             'accountNumber' => (string) $recipient->getBankAccount(),
             'bankCode' => (string) $recipient->getBankCode(),
             'bankName' => (string) $recipient->getBankName(),
@@ -170,7 +170,7 @@ class Client implements HttpClientInterface
             $this->setSourceModel($transaction);
         }
 
-        return $this->performRequest(HttpMethodEnum::POST(), 'transactions/quotations/bank-account', [
+        return $this->performRequest(HttpMethodEnum::POST, 'transactions/quotations/bank-account', [
             'accountNumber' => (string) $recipient->getBankAccount(),
             'beneficiaryCountry' => $recipient->getCountryCode(),
             'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
@@ -209,7 +209,7 @@ class Client implements HttpClientInterface
             $this->setSourceModel($transaction);
         }
 
-        return $this->performRequest(HttpMethodEnum::POST(), 'transactions/remittances/bank-account', [
+        return $this->performRequest(HttpMethodEnum::POST, 'transactions/remittances/bank-account', [
             'sessionId' => $transaction->getReference(),
             'identifier' => $identifierSource->getCode(),
             'quoteId' => $quota->getReference(),
@@ -256,6 +256,6 @@ class Client implements HttpClientInterface
         }
 
         $uri = (string) $this->resolveUriFor($this->config->getUrl(), $uri);
-        return $this->httpClient->request((string) $method, $uri, $options);
+        return $this->httpClient->request($method->value, $uri, $options);
     }
 }
