@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.1.0...v0.1.1) (2021-12-25)
+
+
+### Bug Fixes
+
+* use native enums ([eb4a9e4](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/eb4a9e46af9640fc6299a8ffd653091e643bdf67))
+
 ## 0.1.0 (2021-12-19)
 
 
