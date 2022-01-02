@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.1](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.2.0...v0.2.1) (2022-01-02)
+
+
+### Bug Fixes
+
+* remove baseline ([9a1c83a](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/9a1c83acb99ff451aa4a8473bc8d3ab213348900))
+
 ## [0.2.0](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.1.0...v0.2.0) (2021-12-25)
 
 
