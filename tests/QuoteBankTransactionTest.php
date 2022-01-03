@@ -10,6 +10,7 @@ namespace BrokeYourBike\Bancore\Tests;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
+use BrokeYourBike\Bancore\Models\QuoteBankTransactionResponse;
 use BrokeYourBike\Bancore\Interfaces\TransactionInterface;
 use BrokeYourBike\Bancore\Interfaces\SenderInterface;
 use BrokeYourBike\Bancore\Interfaces\RecipientInterface;
@@ -104,7 +105,7 @@ class QuoteBankTransactionTest extends TestCase
         $mockedResponse->method('getBody')
             ->willReturn('{
                     "responseCode": "1000",
-                    "responseDescription": "Successful operation",
+                    "responseDescription": "Successful operation"
                 }');
 
         /** @var \Mockery\MockInterface $mockedClient */
@@ -113,7 +114,7 @@ class QuoteBankTransactionTest extends TestCase
             'POST',
             'https://api.example/transactions/quotations/bank-account',
             [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
+
                 \GuzzleHttp\RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
                     'Authorization' => "Bearer {$this->token}",
@@ -144,60 +145,6 @@ class QuoteBankTransactionTest extends TestCase
 
         $requestResult = $api->quoteBankTransaction($this->sessionId, $transaction);
 
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
-    }
-
-    /** @test */
-    public function it_will_pass_source_model_as_option(): void
-    {
-        $transaction = $this->getMockBuilder(SourceTransactionFixture::class)->getMock();
-        $transaction->method('getSender')->willReturn($this->sender);
-        $transaction->method('getRecipient')->willReturn($this->recipient);
-
-        /** @var SourceTransactionFixture $transaction */
-        $this->assertInstanceOf(SourceTransactionFixture::class, $transaction);
-
-        $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $mockedConfig->method('getUrl')->willReturn('https://api.example/');
-
-        /** @var \Mockery\MockInterface $mockedClient */
-        $mockedClient = \Mockery::mock(\GuzzleHttp\Client::class);
-        $mockedClient->shouldReceive('request')->withArgs([
-            'POST',
-            'https://api.example/transactions/quotations/bank-account',
-            [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
-                \GuzzleHttp\RequestOptions::HEADERS => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer {$this->token}",
-                ],
-                \GuzzleHttp\RequestOptions::JSON => [
-                    'accountNumber' => $transaction->getRecipient()?->getBankAccount(),
-                    'beneficiaryCountry' => $transaction->getRecipient()?->getCountryCode(),
-                    'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
-                    'beneficiaryMobileNumber' => $transaction->getRecipient()?->getPhoneNumber(),
-                    'senderAmount' => $transaction->getReceiveAmount(),
-                    'senderCurrency' => $transaction->getSendCurrencyCode(),
-                    'senderMobileNumber' => $transaction->getSender()?->getPhoneNumber(),
-                    'sessionId' => $this->sessionId,
-                ],
-                \BrokeYourBike\HasSourceModel\Enums\RequestOptions::SOURCE_MODEL => $transaction,
-            ],
-        ])->once();
-
-        $mockedCache = $this->getMockBuilder(CacheInterface::class)->getMock();
-        $mockedCache->method('has')->willReturn(true);
-        $mockedCache->method('get')->willReturn($this->token);
-
-        /**
-         * @var ConfigInterface $mockedConfig
-         * @var \GuzzleHttp\Client $mockedClient
-         * @var CacheInterface $mockedCache
-         * */
-        $api = new Client($mockedConfig, $mockedClient, $mockedCache);
-
-        $requestResult = $api->quoteBankTransaction($this->sessionId, $transaction);
-
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
+        $this->assertInstanceOf(QuoteBankTransactionResponse::class, $requestResult);
     }
 }

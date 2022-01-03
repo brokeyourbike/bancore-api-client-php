@@ -10,6 +10,7 @@ namespace BrokeYourBike\Bancore\Tests;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
+use BrokeYourBike\Bancore\Models\FetchAuthTokenResponse;
 use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
 use BrokeYourBike\Bancore\Client;
 
@@ -33,8 +34,15 @@ class FetchAuthTokenRawTest extends TestCase
         $mockedResponse->method('getStatusCode')->willReturn(200);
         $mockedResponse->method('getBody')
             ->willReturn('{
+                "uuid": "ed0d0d9c-8591-4b24-b738-6e511f50da8a",
+                "username": "user@example.com",
+                "firstName": "JOHN",
+                "lastName": "DOE",
+                "email": "user@example.com",
                 "token": "123456789",
-                "expiresIn": 86400
+                "expiresIn": 86400,
+                "lastLoggedIn": "2022-01-03 04:43:32",
+                "createdAt": "2021-04-14 11:00:00"
             }');
 
         /** @var \Mockery\MockInterface $mockedClient */
@@ -43,7 +51,6 @@ class FetchAuthTokenRawTest extends TestCase
             'POST',
             'https://api.example/auth',
             [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
                 \GuzzleHttp\RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
                 ],
@@ -63,8 +70,10 @@ class FetchAuthTokenRawTest extends TestCase
          * @var CacheInterface $mockedCache
          * */
         $api = new Client($mockedConfig, $mockedClient, $mockedCache);
-        $requestResult = $api->fetchAuthTokenRaw();
+        $response = $api->fetchAuthTokenRaw();
 
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
+        $this->assertInstanceOf(FetchAuthTokenResponse::class, $response);
+        $this->assertSame(86400, $response->expiresIn);
+        $this->assertSame('123456789', $response->token);
     }
 }

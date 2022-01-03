@@ -10,6 +10,7 @@ namespace BrokeYourBike\Bancore\Tests;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
+use BrokeYourBike\Bancore\Models\SendBankTransactionResponse;
 use BrokeYourBike\Bancore\Interfaces\TransactionInterface;
 use BrokeYourBike\Bancore\Interfaces\SenderInterface;
 use BrokeYourBike\Bancore\Interfaces\RecipientInterface;
@@ -166,7 +167,7 @@ class SendBankTransactionTest extends TestCase
         $mockedResponse->method('getBody')
             ->willReturn('{
                     "responseCode": "1000",
-                    "responseDescription": "Successful operation",
+                    "responseDescription": "Successful operation"
                 }');
 
         /** @var \Mockery\MockInterface $mockedClient */
@@ -175,7 +176,6 @@ class SendBankTransactionTest extends TestCase
             'POST',
             'https://api.example/transactions/remittances/bank-account',
             [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
                 \GuzzleHttp\RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
                     'Authorization' => "Bearer {$this->token}",
@@ -220,75 +220,6 @@ class SendBankTransactionTest extends TestCase
 
         $requestResult = $api->sendBankTransaction($transaction);
 
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
-    }
-
-    /** @test */
-    public function it_will_pass_source_model_as_option(): void
-    {
-        $transaction = $this->getMockBuilder(SourceTransactionFixture::class)->getMock();
-        $transaction->method('getSender')->willReturn($this->sender);
-        $transaction->method('getRecipient')->willReturn($this->recipient);
-        $transaction->method('getQuota')->willReturn($this->quota);
-        $transaction->method('getIdentifierSource')->willReturn($this->identifierSource);
-
-        /** @var SourceTransactionFixture $transaction */
-        $this->assertInstanceOf(SourceTransactionFixture::class, $transaction);
-
-        $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $mockedConfig->method('getUrl')->willReturn('https://api.example/');
-
-        /** @var \Mockery\MockInterface $mockedClient */
-        $mockedClient = \Mockery::mock(\GuzzleHttp\Client::class);
-        $mockedClient->shouldReceive('request')->withArgs([
-            'POST',
-            'https://api.example/transactions/remittances/bank-account',
-            [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
-                \GuzzleHttp\RequestOptions::HEADERS => [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer {$this->token}",
-                ],
-                \GuzzleHttp\RequestOptions::JSON => [
-                    'sessionId' => $transaction->getReference(),
-                    'identifier' => $transaction->getIdentifierSource()?->getCode(),
-                    'quoteId' => $transaction->getQuota()?->getReference(),
-                    'accountNumber' => $transaction->getRecipient()?->getBankAccount(),
-                    'bankCode' => $transaction->getRecipient()?->getBankCode(),
-                    'beneficiaryAmount' => $transaction->getReceiveAmount(),
-                    'beneficiaryCountry' => $transaction->getRecipient()?->getCountryCode(),
-                    'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
-                    'beneficiaryDetails' => [
-                        'fullName' => $transaction->getRecipient()?->getName(),
-                    ],
-                    'beneficiaryMobileNumber' => $transaction->getRecipient()?->getPhoneNumber(),
-                    'senderCurrency' => $transaction->getSendCurrencyCode(),
-                    'senderDetails' => [
-                        'fullName' => $transaction->getSender()?->getName(),
-                        'address' => [
-                            'country' => $transaction->getSender()?->getCountryCode(),
-                        ],
-                    ],
-                    'senderMobileNumber' => $transaction->getSender()?->getPhoneNumber(),
-                    'description' => $transaction->getReference(),
-                ],
-                \BrokeYourBike\HasSourceModel\Enums\RequestOptions::SOURCE_MODEL => $transaction,
-            ],
-        ])->once();
-
-        $mockedCache = $this->getMockBuilder(CacheInterface::class)->getMock();
-        $mockedCache->method('has')->willReturn(true);
-        $mockedCache->method('get')->willReturn($this->token);
-
-        /**
-         * @var ConfigInterface $mockedConfig
-         * @var \GuzzleHttp\Client $mockedClient
-         * @var CacheInterface $mockedCache
-         * */
-        $api = new Client($mockedConfig, $mockedClient, $mockedCache);
-
-        $requestResult = $api->sendBankTransaction($transaction);
-
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
+        $this->assertInstanceOf(SendBankTransactionResponse::class, $requestResult);
     }
 }

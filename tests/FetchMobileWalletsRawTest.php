@@ -10,6 +10,7 @@ namespace BrokeYourBike\Bancore\Tests;
 
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
+use BrokeYourBike\Bancore\Models\FetchMobileWalletsResponse;
 use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
 use BrokeYourBike\Bancore\Client;
 
@@ -42,7 +43,6 @@ class FetchMobileWalletsRawTest extends TestCase
             'GET',
             "https://api.example/miscellaneous/mobile-wallets/country/{$this->countryCode}",
             [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
                 \GuzzleHttp\RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
                     'Authorization' => "Bearer {$this->token}",
@@ -61,9 +61,8 @@ class FetchMobileWalletsRawTest extends TestCase
          * @var CacheInterface $mockedCache
          * */
         $api = new Client($mockedConfig, $mockedClient, $mockedCache);
+        $response = $api->fetchMobileWalletsRaw($this->countryCode);
 
-        $requestResult = $api->fetchMobileWalletsRaw($this->countryCode);
-
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
+        $this->assertInstanceOf(FetchMobileWalletsResponse::class, $response);
     }
 }

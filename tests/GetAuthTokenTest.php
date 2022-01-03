@@ -28,8 +28,15 @@ class GetAuthTokenTest extends TestCase
         $mockedResponse->method('getStatusCode')->willReturn(200);
         $mockedResponse->method('getBody')
             ->willReturn('{
-                "expiresIn": "3600",
-                "token": "' . $this->tokenValue . '"
+                "uuid": "ed0d0d9c-8591-4b24-b738-6e511f50da8a",
+                "username": "user@example.com",
+                "firstName": "JOHN",
+                "lastName": "DOE",
+                "email": "user@example.com",
+                "token": "' . $this->tokenValue . '",
+                "expiresIn": 3600,
+                "lastLoggedIn": "2022-01-03 04:43:32",
+                "createdAt": "2021-04-14 11:00:00"
             }');
 
         /** @var \GuzzleHttp\Client $mockedClient */
@@ -86,35 +93,5 @@ class GetAuthTokenTest extends TestCase
         $requestResult = $api->getAuthToken();
 
         $this->assertSame($this->tokenValue, $requestResult);
-    }
-
-    /** @test */
-    public function it_will_return_null_if_response_invalid()
-    {
-        $mockedConfig = $this->getMockBuilder(ConfigInterface::class)->getMock();
-
-        $mockedResponse = $this->getMockBuilder(\Psr\Http\Message\ResponseInterface::class)->getMock();
-        $mockedResponse->method('getStatusCode')->willReturn(200);
-        $mockedResponse->method('getBody')->willReturn('{}');
-
-        /** @var \GuzzleHttp\Client $mockedClient */
-        $mockedClient = $this->createPartialMock(\GuzzleHttp\Client::class, ['request']);
-        $mockedClient->method('request')->willReturn($mockedResponse);
-
-        /** @var \Mockery\MockInterface $mockedCache */
-        $mockedCache = \Mockery::spy(CacheInterface::class);
-
-        /**
-         * @var ConfigInterface $mockedConfig
-         * @var \GuzzleHttp\Client $mockedClient
-         * @var CacheInterface $mockedCache
-         * */
-        $api = new Client($mockedConfig, $mockedClient, $mockedCache);
-        $requestResult = $api->getAuthToken();
-
-        $this->assertNull($requestResult);
-
-        /** @var \Mockery\MockInterface $mockedCache */
-        $mockedCache->shouldNotReceive('set');
     }
 }

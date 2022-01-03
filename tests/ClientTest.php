@@ -8,7 +8,6 @@
 
 namespace BrokeYourBike\Bancore\Tests;
 
-use PHPUnit\Framework\TestCase;
 use BrokeYourBike\ResolveUri\ResolveUriTrait;
 use BrokeYourBike\HttpClient\HttpClientTrait;
 use BrokeYourBike\HttpClient\HttpClientInterface;
@@ -36,6 +35,8 @@ class ClientTest extends TestCase
         $api = new Client($mockedConfig, $mockedHttpClient, $mockedCache);
 
         $this->assertInstanceOf(HttpClientInterface::class, $api);
+        $this->assertSame($mockedConfig, $api->getConfig());
+        $this->assertSame($mockedCache, $api->getCache());
     }
 
     /** @test */

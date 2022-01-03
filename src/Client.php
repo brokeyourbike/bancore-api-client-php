@@ -17,6 +17,13 @@ use BrokeYourBike\HttpClient\HttpClientTrait;
 use BrokeYourBike\HttpClient\HttpClientInterface;
 use BrokeYourBike\HasSourceModel\SourceModelInterface;
 use BrokeYourBike\HasSourceModel\HasSourceModelTrait;
+use BrokeYourBike\Bancore\Models\ValidateBankTransactionResponse;
+use BrokeYourBike\Bancore\Models\SendBankTransactionResponse;
+use BrokeYourBike\Bancore\Models\QuoteBankTransactionResponse;
+use BrokeYourBike\Bancore\Models\FetchMobileWalletsResponse;
+use BrokeYourBike\Bancore\Models\FetchExhangeRatesResponse;
+use BrokeYourBike\Bancore\Models\FetchBanksResponse;
+use BrokeYourBike\Bancore\Models\FetchAuthTokenResponse;
 use BrokeYourBike\Bancore\Interfaces\TransactionInterface;
 use BrokeYourBike\Bancore\Interfaces\SenderInterface;
 use BrokeYourBike\Bancore\Interfaces\RecipientInterface;
@@ -44,12 +51,22 @@ class Client implements HttpClientInterface
         $this->cache = $cache;
     }
 
+    public function getConfig(): ConfigInterface
+    {
+        return $this->config;
+    }
+
+    public function getCache(): CacheInterface
+    {
+        return $this->cache;
+    }
+
     public function authTokenCacheKey(): string
     {
         return get_class($this) . ':authToken:';
     }
 
-    public function getAuthToken(): ?string
+    public function getAuthToken(): string
     {
         if ($this->cache->has($this->authTokenCacheKey())) {
             $cachedToken = $this->cache->get($this->authTokenCacheKey());
@@ -59,31 +76,19 @@ class Client implements HttpClientInterface
         }
 
         $response = $this->fetchAuthTokenRaw();
-        $responseJson = \json_decode((string) $response->getBody(), true);
 
-        if (
-            is_array($responseJson) &&
-            isset($responseJson['token']) &&
-            is_string($responseJson['token']) &&
-            isset($responseJson['expiresIn']) &&
-            is_numeric($responseJson['expiresIn'])
-        ) {
-            $this->cache->set(
-                $this->authTokenCacheKey(),
-                $responseJson['token'],
-                (int) $responseJson['expiresIn']
-            );
+        $this->cache->set(
+            $this->authTokenCacheKey(),
+            $response->token,
+            $response->expiresIn
+        );
 
-            return $responseJson['token'];
-        }
-
-        return null;
+        return $response->token;
     }
 
-    public function fetchAuthTokenRaw(): ResponseInterface
+    public function fetchAuthTokenRaw(): FetchAuthTokenResponse
     {
         $options = [
-            \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
             \GuzzleHttp\RequestOptions::HEADERS => [
                 'Accept' => 'application/json',
             ],
@@ -96,29 +101,37 @@ class Client implements HttpClientInterface
 
         $uri = (string) $this->resolveUriFor($this->config->getUrl(), 'auth');
 
-        return $this->httpClient->request(
+        $response = $this->httpClient->request(
             HttpMethodEnum::POST->value,
             $uri,
             $options
         );
+
+        return new FetchAuthTokenResponse($response);
     }
 
-    public function fetchBanksRaw(string $countryCode): ResponseInterface
+    public function fetchBanksRaw(string $countryCode): FetchBanksResponse
     {
-        return $this->performRequest(HttpMethodEnum::GET, "miscellaneous/banks/country/{$countryCode}", []);
+        $response = $this->performRequest(HttpMethodEnum::GET, "miscellaneous/banks/country/{$countryCode}", []);
+
+        return new FetchBanksResponse($response);
     }
 
-    public function fetchMobileWalletsRaw(string $countryCode): ResponseInterface
+    public function fetchMobileWalletsRaw(string $countryCode): FetchMobileWalletsResponse
     {
-        return $this->performRequest(HttpMethodEnum::GET, "miscellaneous/mobile-wallets/country/{$countryCode}", []);
+        $response = $this->performRequest(HttpMethodEnum::GET, "miscellaneous/mobile-wallets/country/{$countryCode}", []);
+
+        return new FetchMobileWalletsResponse($response);
     }
 
-    public function fetchExhangeRatesForRaw(string $baseCurrencyCode): ResponseInterface
+    public function fetchExhangeRatesForRaw(string $baseCurrencyCode): FetchExhangeRatesResponse
     {
-        return $this->performRequest(HttpMethodEnum::GET, "transactions/exchange-rates/{$baseCurrencyCode}", []);
+        $response = $this->performRequest(HttpMethodEnum::GET, "transactions/exchange-rates/{$baseCurrencyCode}", []);
+
+        return new FetchExhangeRatesResponse($response);
     }
 
-    public function validateBankTransaction(string $sessionId, TransactionInterface $transaction): ResponseInterface
+    public function validateBankTransaction(string $sessionId, TransactionInterface $transaction): ValidateBankTransactionResponse
     {
         $sender = $transaction->getSender();
         $recipient = $transaction->getRecipient();
@@ -140,7 +153,7 @@ class Client implements HttpClientInterface
             $this->setSourceModel($transaction);
         }
 
-        return $this->performRequest(HttpMethodEnum::POST, 'transactions/validations/bank-account', [
+        $response = $this->performRequest(HttpMethodEnum::POST, 'transactions/validations/bank-account', [
             'accountNumber' => (string) $recipient->getBankAccount(),
             'bankCode' => (string) $recipient->getBankCode(),
             'bankName' => (string) $recipient->getBankName(),
@@ -151,9 +164,11 @@ class Client implements HttpClientInterface
             'mobileNumber' => $sender->getPhoneNumber(),
             'sessionId' => $sessionId,
         ]);
+
+        return new ValidateBankTransactionResponse($response);
     }
 
-    public function quoteBankTransaction(string $sessionId, TransactionInterface $transaction): ResponseInterface
+    public function quoteBankTransaction(string $sessionId, TransactionInterface $transaction): QuoteBankTransactionResponse
     {
         $sender = $transaction->getSender();
         $recipient = $transaction->getRecipient();
@@ -170,7 +185,7 @@ class Client implements HttpClientInterface
             $this->setSourceModel($transaction);
         }
 
-        return $this->performRequest(HttpMethodEnum::POST, 'transactions/quotations/bank-account', [
+        $response = $this->performRequest(HttpMethodEnum::POST, 'transactions/quotations/bank-account', [
             'accountNumber' => (string) $recipient->getBankAccount(),
             'beneficiaryCountry' => $recipient->getCountryCode(),
             'beneficiaryCurrency' => $transaction->getReceiveCurrencyCode(),
@@ -180,9 +195,11 @@ class Client implements HttpClientInterface
             'senderMobileNumber' => $sender->getPhoneNumber(),
             'sessionId' => $sessionId,
         ]);
+
+        return new QuoteBankTransactionResponse($response);
     }
 
-    public function sendBankTransaction(TransactionInterface $transaction): ResponseInterface
+    public function sendBankTransaction(TransactionInterface $transaction): SendBankTransactionResponse
     {
         $sender = $transaction->getSender();
         $recipient = $transaction->getRecipient();
@@ -209,7 +226,7 @@ class Client implements HttpClientInterface
             $this->setSourceModel($transaction);
         }
 
-        return $this->performRequest(HttpMethodEnum::POST, 'transactions/remittances/bank-account', [
+        $response = $this->performRequest(HttpMethodEnum::POST, 'transactions/remittances/bank-account', [
             'sessionId' => $transaction->getReference(),
             'identifier' => $identifierSource->getCode(),
             'quoteId' => $quota->getReference(),
@@ -232,6 +249,8 @@ class Client implements HttpClientInterface
             'senderMobileNumber' => $sender->getPhoneNumber(),
             'description' => $transaction->getReference(),
         ]);
+
+        return new SendBankTransactionResponse($response);
     }
 
     /**
@@ -243,10 +262,9 @@ class Client implements HttpClientInterface
     private function performRequest(HttpMethodEnum $method, string $uri, array $data): ResponseInterface
     {
         $options = [
-            \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
             \GuzzleHttp\RequestOptions::HEADERS => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . (string) $this->getAuthToken(),
+                'Authorization' => "Bearer {$this->getAuthToken()}",
             ],
             \GuzzleHttp\RequestOptions::JSON => $data,
         ];

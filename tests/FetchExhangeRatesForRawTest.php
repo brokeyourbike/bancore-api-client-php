@@ -11,6 +11,7 @@ namespace BrokeYourBike\Bancore\Tests;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Carbon\Carbon;
+use BrokeYourBike\Bancore\Models\FetchExhangeRatesResponse;
 use BrokeYourBike\Bancore\Interfaces\ConfigInterface;
 use BrokeYourBike\Bancore\Client;
 
@@ -49,7 +50,6 @@ class FetchExhangeRatesForRawTest extends TestCase
             'GET',
             "https://api.example/transactions/exchange-rates/{$this->currencyCode}",
             [
-                \GuzzleHttp\RequestOptions::HTTP_ERRORS => false,
                 \GuzzleHttp\RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
                     'Authorization' => "Bearer {$this->token}",
@@ -71,6 +71,7 @@ class FetchExhangeRatesForRawTest extends TestCase
 
         $requestResult = $api->fetchExhangeRatesForRaw($this->currencyCode);
 
-        $this->assertInstanceOf(ResponseInterface::class, $requestResult);
+        $this->assertInstanceOf(FetchExhangeRatesResponse::class, $requestResult);
+        $this->assertCount(1, $requestResult->quotes);
     }
 }
