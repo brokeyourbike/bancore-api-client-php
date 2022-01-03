@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.2.1...v0.3.0) (2022-01-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* add response models
+
+### Features
+
+* add response models ([cf093f1](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/cf093f1bf6ed65680e3be25bd6b9f1ecc6ff67cb))
+
 ### [0.2.1](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.2.0...v0.2.1) (2022-01-02)
 
 
