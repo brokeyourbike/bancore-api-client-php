@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.3.2](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.3.1...v0.3.2) (2023-05-20)
+
+
+### Miscellaneous Chores
+
+* button ([1032483](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/103248321987630e14abe1c391474c690b3f62da))
+* no links ([169e5d9](https://www.github.com/brokeyourbike/bancore-api-client-php/commit/169e5d9064db0b19384b415e52155b8ba2741eb5))
+
 ### [0.3.1](https://www.github.com/brokeyourbike/bancore-api-client-php/compare/v0.3.0...v0.3.1) (2023-05-14)
 
 
